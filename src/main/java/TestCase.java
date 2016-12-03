@@ -11,7 +11,8 @@ public abstract class TestCase {
         this.methodName = methodName;
     }
 
-    public abstract void setUp();
+    public void setUp() {
+    }
 
     public void run() {
         try {
