@@ -2,16 +2,15 @@
  * @author Kj Nam
  * @since 2016-12-03
  */
-public class WasRun {
-    String name;
+public class WasRun extends TestCase{
     boolean wasRun;
 
     public WasRun(String name) {
-        this.name = name;
+        super(name);
         wasRun = false;
     }
 
-    public void testMethod() {
+    public void testMethod(){
         wasRun = true;
     }
 }
