@@ -18,4 +18,10 @@ public class TestCaseTest extends TestCase {
         test.run();
         assert "setUp testMethod tearDown".equals(test.log);
     }
+
+    public void testResult() {
+        test = new WasRun("testMethod");
+        TestResult result = test.run();
+        System.out.println(result.summary());
+    }
 }

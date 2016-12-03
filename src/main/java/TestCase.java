@@ -14,14 +14,19 @@ public abstract class TestCase {
     public void setUp() {
     }
 
-    public void run() {
+    public TestResult run() {
+        TestResult result = new TestResult();
         try {
+            result.testStarted();
+
             setUp();
             Method method = this.getClass().getMethod(this.methodName);
             method.invoke(this);
-            tearDown();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            tearDown();
+            return result;
         }
     }
 
