@@ -22,6 +22,16 @@ public class TestCaseTest extends TestCase {
     public void testResult() {
         test = new WasRun("testMethod");
         TestResult result = test.run();
-        System.out.println(result.summary());
+    }
+
+    public void testFailedResult() {
+        test = new WasRun("testBrokenMethod");
+        TestResult result = test.run();
+    }
+
+    public void testFailedResultFormatting() {
+        TestResult result = test.run();
+        result.testStarted();
+        result.testFailed();
     }
 }

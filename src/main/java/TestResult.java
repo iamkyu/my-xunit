@@ -4,16 +4,22 @@
  */
 public class TestResult {
     int runCount;
+    int failedCount;
 
     public TestResult() {
         runCount = 0;
+        failedCount = 0;
     }
 
     public void testStarted() {
         runCount++;
     }
 
-    public String summary() {
-        return String.format("%d run, 0 failed", runCount);
+    public void testFailed() {
+        failedCount++;
+    }
+
+    public void summary() {
+        System.out.println(String.format("%d run, %d failed", runCount, failedCount));
     }
 }
