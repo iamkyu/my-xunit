@@ -16,7 +16,7 @@ public class TestCaseTest extends TestCase {
 
     public void testSetup() {
         test.run();
-        assert test.wasSetup == true : "test.wasSetup이 setup 되지 않음"; System.out.println("test.wasSetup = " + test.wasSetup);
+        assert test.log == "setUp" : "test.wasSetup이 setup 되지 않음"; System.out.println(test.log);
     }
 
     public void testRunning() {
