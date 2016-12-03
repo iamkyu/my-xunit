@@ -4,9 +4,22 @@
  */
 public class TestCaseTest extends TestCase {
     WasRun test;
+    TestResult testResult;
 
     public TestCaseTest(String methodName) {
         super(methodName);
+    }
+
+    @Override
+    public void setUp() {
+        testResult = new TestResult();
+    }
+
+    public void testSuite() {
+        TestSuite suite = new TestSuite();
+        suite.add(new WasRun("testMethod"));
+        suite.add(new WasRun("testBrokenMethod"));
+        suite.run(testResult);
     }
 
     public void testTemplateMethod() {
@@ -15,23 +28,22 @@ public class TestCaseTest extends TestCase {
         // http://docs.oracle.com/javase/7/docs/technotes/guides/language/assert.html
 
         test = new WasRun("testMethod");
-        test.run();
+        test.run(testResult);
         assert "setUp testMethod tearDown".equals(test.log);
     }
 
     public void testResult() {
         test = new WasRun("testMethod");
-        TestResult result = test.run();
+        test.run(testResult);
     }
 
     public void testFailedResult() {
         test = new WasRun("testBrokenMethod");
-        TestResult result = test.run();
+        test.run(testResult);
     }
 
     public void testFailedResultFormatting() {
-        TestResult result = test.run();
-        result.testStarted();
-        result.testFailed();
+        testResult.testStarted();
+        testResult.testFailed();
     }
 }

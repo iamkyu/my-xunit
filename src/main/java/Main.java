@@ -4,9 +4,13 @@
  */
 public class Main {
     public static void main(String[] args) {
-        new TestCaseTest("testTemplateMethod").run().summary();
-        new TestCaseTest("testResult").run().summary();
-        new TestCaseTest("testFailedResult").run().summary();
-        new TestCaseTest("testFailedResultFormatting").run().summary();
+        TestSuite suite = new TestSuite();
+        suite.add(new TestCaseTest("testResult"));
+        suite.add(new TestCaseTest("testFailedResult"));
+        suite.add(new TestCaseTest("testFailedResultFormatting"));
+
+        TestResult result = new TestResult();
+        suite.run(result);
+        result.summary();
     }
 }
