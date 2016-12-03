@@ -4,7 +4,7 @@
  */
 public class Main {
     public static void main(String[] args) {
-        TestCaseTest test = new TestCaseTest("testRunning");
-        test.run();
+        new TestCaseTest("testRunning").run();
+        new TestCaseTest("testSetup").run();
     }
 }
