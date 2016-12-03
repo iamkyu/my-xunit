@@ -19,8 +19,12 @@ public abstract class TestCase {
             setUp();
             Method method = this.getClass().getMethod(this.methodName);
             method.invoke(this);
+            tearDown();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void tearDown() {
     }
 }

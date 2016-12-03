@@ -16,6 +16,6 @@ public class TestCaseTest extends TestCase {
 
         test = new WasRun("testMethod");
         test.run();
-        assert "setUp testMethod".equals(test.log) : "test.wasSetup이 setup 되지 않음"; System.out.println(test.log);
+        assert "setUp testMethod tearDown".equals(test.log);
     }
 }
