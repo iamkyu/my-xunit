@@ -82,6 +82,44 @@ public class DollarTest {
         assertEquals(1, new Bank().rate("USD", "USD"));
     }
 
+    @Test
+    public void testMixedAddition() {
+        Expression fiveBucks = Money.dollar(5);
+        Expression tenFrances = Money.franc(10);
+        Bank bank = new Bank();
+        bank.addRate("CHF", "USD", 2);
+        Money result = bank.reduce(fiveBucks.plus(tenFrances), "USD");
+        assertEquals(Money.dollar(10), result);
+    }
+
+    @Test
+    public void testSumPlusMoney() {
+        Expression fiveBucks = Money.dollar(5);
+        Expression tenFrances = Money.franc(10);
+        Bank bank = new Bank();
+        bank.addRate("CHF", "USD", 2);
+        Expression sum = new Sum(fiveBucks, tenFrances).plus(fiveBucks);
+        Money result = bank.reduce(sum, "USD");
+        assertEquals(Money.dollar(15),result);
+    }
+
+    @Test
+    public void testSumTimes() {
+        Expression fiveBucks = Money.dollar(5);
+        Expression tenFrances = Money.franc(10);
+        Bank bank = new Bank();
+        bank.addRate("CHF", "USD", 2);
+        Expression sum = new Sum(fiveBucks, tenFrances).times(2);
+        Money result = bank.reduce(sum, "USD");
+        assertEquals(Money.dollar(20),result);
+    }
+
+    @Test
+    public void testPlusSameCurrencyReturnsMoney() {
+        Expression sum = Money.dollar(1).plus(Money.dollar(1));
+        assertTrue(sum instanceof Money);
+    }
+
     static class Money implements Expression {
         protected int amount;
         protected String currency;
@@ -106,7 +144,8 @@ public class DollarTest {
             return new Money(amount, "CHF");
         }
 
-        public Money times(int multiplier) {
+        @Override
+        public Expression times(int multiplier) {
             return new Money(amount * multiplier, currency);
         }
 
@@ -114,7 +153,8 @@ public class DollarTest {
             return currency;
         }
 
-        public Expression plus(Money addend) {
+        @Override
+        public Expression plus(Expression addend) {
             return new Sum(this, addend);
         }
 
@@ -147,20 +187,35 @@ public class DollarTest {
 
     interface Expression {
         Money reduce(Bank bank, String to);
+
+        Expression plus(Expression addend);
+
+        Expression times(int multiplier);
     }
 
     static class Sum implements Expression {
-        public Money augend;
-        public Money addend;
+        public Expression augend;
+        public Expression addend;
 
-        public Sum(Money augend, Money addend) {
+        public Sum(Expression augend, Expression addend) {
             this.augend = augend;
             this.addend = addend;
         }
 
         public Money reduce(Bank bank, String to) {
-            int amount = augend.amount + addend.amount;
+            int amount = augend.reduce(bank, to).amount
+                    + addend.reduce(bank, to).amount;
             return new Money(amount, to);
+        }
+
+        @Override
+        public Expression plus(Expression addend) {
+            return new Sum(this, addend);
+        }
+
+        @Override
+        public Expression times(int multiplier) {
+            return new Sum(augend.times(multiplier), addend.times(multiplier));
         }
     }
 
