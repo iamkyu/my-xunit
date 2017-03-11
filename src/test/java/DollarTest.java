@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import java.util.Hashtable;
+
 import static org.junit.Assert.*;
 
 /**
@@ -67,6 +69,19 @@ public class DollarTest {
         assertEquals(Money.dollar(1), result);
     }
 
+    @Test
+    public void testReduceMoneyDifferentCurrency() {
+        Bank bank = new Bank();
+        bank.addRate("CHF", "USD", 2);
+        Money result = bank.reduce(Money.franc(2), "USD");
+        assertEquals(Money.dollar(1), result);
+    }
+
+    @Test
+    public void testIdentityRate() {
+        assertEquals(1, new Bank().rate("USD", "USD"));
+    }
+
     static class Money implements Expression {
         protected int amount;
         protected String currency;
@@ -104,22 +119,37 @@ public class DollarTest {
         }
 
         @Override
-        public Money reduce(String to) {
-            return this;
+        public Money reduce(Bank bank, String to) {
+            int rate = bank.rate(currency, to);
+            return new Money(amount / rate, to);
         }
     }
 
-    private class Bank {
+    class Bank {
+        private Hashtable rates = new Hashtable();
+
         public Money reduce(Expression source, String to) {
-            return source.reduce(to);
+            return source.reduce(this, to);
+        }
+
+        public void addRate(String from, String to, int rate) {
+            rates.put(new Pair(from, to), new Integer(rate));
+        }
+
+        public int rate(String from, String to) {
+            if (from.equals(to))
+                return 1;
+
+            Integer rate = (Integer) rates.get(new Pair(from, to));
+            return rate.intValue();
         }
     }
 
     interface Expression {
-        Money reduce(String to);
+        Money reduce(Bank bank, String to);
     }
 
-    private static class Sum implements Expression {
+    static class Sum implements Expression {
         public Money augend;
         public Money addend;
 
@@ -128,9 +158,31 @@ public class DollarTest {
             this.addend = addend;
         }
 
-        public Money reduce(String to) {
+        public Money reduce(Bank bank, String to) {
             int amount = augend.amount + addend.amount;
             return new Money(amount, to);
         }
     }
+
+    private class Pair {
+        private String from;
+        private String to;
+
+        public Pair(String from, String to) {
+            this.from = from;
+            this.to = to;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            Pair pair = (Pair) obj;
+            return from.equals(pair.from) && to.equals(pair.to);
+        }
+    }
+
 }
