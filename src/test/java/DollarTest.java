@@ -36,13 +36,15 @@ public class DollarTest {
         assertEquals("CHF", Money.franc(1).currency());
     }
 
+    @Test
+    public void testDifferentClassEquality() {
+        assertTrue(new Money(10, "CHF")
+                .equals(new Franc(10, "CHF")));
+    }
+
     static class Dollar extends Money {
         public Dollar(int amount, String currency) {
             super(amount, currency);
-        }
-
-        public Dollar times(int multiplier) {
-            return Money.dollar(amount * multiplier);
         }
 
         @Override
@@ -56,17 +58,13 @@ public class DollarTest {
             super(amount, currency);
         }
 
-        public Money times(int multiplier) {
-            return Money.franc(amount * multiplier);
-        }
-
         @Override
         public String currency() {
             return currency;
         }
     }
 
-    abstract static class Money {
+    static class Money {
         protected int amount;
         protected String currency;
 
@@ -78,7 +76,8 @@ public class DollarTest {
         @Override
         public boolean equals(Object obj) {
             Money money = (Money) obj;
-            return amount == money.amount && getClass().equals(money.getClass());
+            return amount == money.amount
+                    && currency().equals(money.currency());
         }
 
         public static Dollar dollar(int amount) {
@@ -89,8 +88,12 @@ public class DollarTest {
             return new Franc(amount, "CHF");
         }
 
-        abstract Money times(int multiplier);
+        public Money times(int multiplier) {
+            return new Money(amount * multiplier, currency);
+        }
 
-        public abstract String currency();
+        public String currency() {
+            return currency;
+        }
     }
 }
