@@ -10,8 +10,8 @@ public class DollarTest {
     @Test
     public void testMultiplication() {
         Money five = Money.dollar(5);
-        assertEquals(new Dollar(10), five.times(2));
-        assertEquals(new Dollar(15), five.times(3));
+        assertEquals(Money.dollar(10), five.times(2));
+        assertEquals(Money.dollar(15), five.times(3));
     }
 
     @Test
@@ -25,33 +25,55 @@ public class DollarTest {
     public void testEquality() {
         assertTrue(Money.dollar(5).equals(Money.dollar(5)));
         assertFalse(Money.dollar(5).equals(Money.dollar(6)));
-        assertTrue(new Franc(5).equals(new Franc(5)));
-        assertFalse(new Franc(5).equals(new Franc(6)));
-        assertFalse(new Franc(5).equals(Money.dollar(5)));
+        assertTrue(Money.franc(5).equals(Money.franc(5)));
+        assertFalse(Money.franc(5).equals(Money.franc(6)));
+        assertFalse(Money.franc(5).equals(Money.dollar(5)));
+    }
+
+    @Test
+    public void testCurrency() {
+        assertEquals("USD", Money.dollar(1).currency());
+        assertEquals("CHF", Money.franc(1).currency());
     }
 
     static class Dollar extends Money {
-        public Dollar(int amount) {
-            this.amount = amount;
+        public Dollar(int amount, String currency) {
+            super(amount, currency);
         }
 
         public Dollar times(int multiplier) {
-            return new Dollar(amount * multiplier);
+            return Money.dollar(amount * multiplier);
+        }
+
+        @Override
+        public String currency() {
+            return currency;
         }
     }
 
     static class Franc extends Money {
-        public Franc(int amount) {
-            this.amount = amount;
+        public Franc(int amount, String currency) {
+            super(amount, currency);
         }
 
-        public Franc times(int multiplier) {
-            return new Franc(amount * multiplier);
+        public Money times(int multiplier) {
+            return Money.franc(amount * multiplier);
+        }
+
+        @Override
+        public String currency() {
+            return currency;
         }
     }
 
     abstract static class Money {
         protected int amount;
+        protected String currency;
+
+        public Money(int amount, String currency) {
+            this.amount = amount;
+            this.currency = currency;
+        }
 
         @Override
         public boolean equals(Object obj) {
@@ -60,14 +82,15 @@ public class DollarTest {
         }
 
         public static Dollar dollar(int amount) {
-            return new Dollar(amount);
+            return new Dollar(amount, "USD");
         }
 
         public static Money franc(int amount) {
-            return new Franc(amount);
+            return new Franc(amount, "CHF");
         }
 
         abstract Money times(int multiplier);
 
+        public abstract String currency();
     }
 }
