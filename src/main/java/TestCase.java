@@ -11,8 +11,11 @@ public abstract class TestCase {
         this.methodName = methodName;
     }
 
+    public abstract void setUp();
+
     public void run() {
         try {
+            setUp();
             Method method = this.getClass().getMethod(this.methodName);
             method.invoke(this);
         } catch (Exception e) {

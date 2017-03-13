@@ -4,9 +4,15 @@
  */
 public class WasRun extends TestCase {
     boolean wasRun;
+    boolean wasSetUp;
 
     public WasRun(String methodName) {
         super(methodName);
+    }
+
+    @Override
+    public void setUp() {
+        wasSetUp = true;
         wasRun = false;
     }
 

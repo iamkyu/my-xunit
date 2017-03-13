@@ -3,8 +3,21 @@
  * @since 2017-03-13
  */
 public class TestCaseTest extends TestCase {
+    WasRun test;
+
     public TestCaseTest(String methodName) {
         super(methodName);
+    }
+
+    @Override
+    public void setUp() {
+        test = new WasRun("testMethod");
+    }
+
+    public void testSetUp() {
+        test.run();
+        assert test.wasSetUp == true : "test.wasSetup이 setup 되지 않음";
+        System.out.println("test.wasSetUp => " + test.wasSetUp);
     }
 
     public void testRunning() {
