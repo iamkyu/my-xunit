@@ -4,6 +4,7 @@
  */
 public class TestCaseTest extends TestCase {
     WasRun test;
+    TestResult result;
 
     public TestCaseTest(String methodName) {
         super(methodName);
@@ -19,8 +20,24 @@ public class TestCaseTest extends TestCase {
 
     public void testTemplateMethod() {
         test = new WasRun("testMethod");
-        test.run();
-        assert test.log.trim() == "setUp testMethod tearDown" : "test.wasSetup이 setup 되지 않음";
-        System.out.println(test.log);
+        result = test.run();
+//        assert test.log.trim() == "setUp testMethod tearDown" : "test.wasSetup이 setup 되지 않음";
+//        System.out.println(test.log);
+        assert result.summary() == "1 run, 0 failed";
+        System.out.println(result.summary());
+    }
+
+    public void testFailedResult() {
+        test = new WasRun("testBrokenMethod");
+        result = test.run();
+        assert result.summary() == "1 run, 1 failed";
+        System.out.println(result.summary());
+    }
+
+    public void testFailedResultFormatting() {
+        result = new TestResult();
+        result.testStarted();
+        result.testFailed();
+        assert result.summary() == "1 run, 1 failed";
     }
 }

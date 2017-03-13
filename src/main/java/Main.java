@@ -5,6 +5,7 @@
 public class Main {
     public static void main(String[] args) {
         new TestCaseTest("testTemplateMethod").run();
-        new TestCaseTest("testRunning").run();
+        new TestCaseTest("testFailedResult").run();
+//        new TestCaseTest("testRunning").run();
     }
 }

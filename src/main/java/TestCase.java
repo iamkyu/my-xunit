@@ -15,14 +15,21 @@ public abstract class TestCase {
 
     public abstract void tearDown();
 
-    public void run() {
+    public TestResult run() {
+        TestResult result = new TestResult();
+
         try {
+            result.testStarted();
+
             setUp();
             Method method = this.getClass().getMethod(this.methodName);
             method.invoke(this);
             tearDown();
+
         } catch (Exception e) {
-            // TODO Something..
+            result.testFailed();
         }
+
+        return result;
     }
 }
