@@ -13,11 +13,14 @@ public abstract class TestCase {
 
     public abstract void setUp();
 
+    public abstract void tearDown();
+
     public void run() {
         try {
             setUp();
             Method method = this.getClass().getMethod(this.methodName);
             method.invoke(this);
+            tearDown();
         } catch (Exception e) {
             // TODO Something..
         }
