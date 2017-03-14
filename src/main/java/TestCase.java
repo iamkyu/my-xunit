@@ -15,8 +15,7 @@ public abstract class TestCase {
 
     public abstract void tearDown();
 
-    public TestResult run() {
-        TestResult result = new TestResult();
+    public TestResult run(TestResult result) {
         result.testStarted();
         setUp();
 
