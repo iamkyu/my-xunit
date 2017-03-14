@@ -5,7 +5,6 @@
 public class TestResult {
     int runCount;
     int failedCount;
-    private boolean summary;
 
     public TestResult() {
         runCount = 0;

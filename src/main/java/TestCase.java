@@ -17,17 +17,16 @@ public abstract class TestCase {
 
     public TestResult run() {
         TestResult result = new TestResult();
+        result.testStarted();
+        setUp();
 
         try {
-            result.testStarted();
-
-            setUp();
             Method method = this.getClass().getMethod(this.methodName);
             method.invoke(this);
-            tearDown();
-
         } catch (Exception e) {
             result.testFailed();
+        } finally {
+            tearDown();
         }
 
         return result;

@@ -4,8 +4,9 @@
  */
 public class Main {
     public static void main(String[] args) {
-        new TestCaseTest("testTemplateMethod").run();
-        new TestCaseTest("testFailedResult").run();
-//        new TestCaseTest("testRunning").run();
+        new TestCaseTest("testTemplateMethod").run().summary();
+        new TestCaseTest("testResult").run().summary();
+        new TestCaseTest("testFailedResult").run().summary();
+        new TestCaseTest("testFailedResultFormatting").run().summary();
     }
 }

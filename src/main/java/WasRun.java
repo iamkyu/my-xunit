@@ -27,6 +27,6 @@ public class WasRun extends TestCase {
     }
 
     public void testBrokenMethod() throws Exception {
-        throw new Exception();
+        throw new RuntimeException();
     }
 }
